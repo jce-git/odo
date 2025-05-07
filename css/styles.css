@@ -1,0 +1,201 @@
+/* to make the .css code more readable we split it into different sections
+check README.md for more information about imported .css files */
+@import url('normalize.css');
+@import url('run-for-narrow-screen.css');
+@import url('run-for-wide-screen.css');
+@import url('nav-bar.css');
+@import url('photo-gallery.css');
+@import url('news-photo-gallery.css');
+
+
+:root {
+  --primary-color: #00a2ff;
+  --secondary-color: #007BFF;
+  --hover-color: #0056b3;
+  --font-color: black;
+  --background-color: white;
+  --h2-color: white;
+  --h2-background-color: #00a2ff;
+  --h3-color: #00a2ff;
+  --h4-color: white;
+  --p-color: black;
+
+}
+
+body {
+  font-family: 'Trebuchet MS', sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  /* color of the website background */
+  /* color of the website font (overwritten by code in section block!) */
+  background-color: var(--background-color);
+}
+
+/* header tag settings */
+h2 {
+  font-size: 21px;
+  color: var(--h2-color);
+  background-color: var(--h2-background-color); /* Tło w kolorze CMYK ffce04ff (HEX #FFC704) */
+  padding: 8px; /* Opcjonalnie: odstęp między tekstem a krawędzią tła */
+  border-radius: 4px; /* Opcjonalnie: zaokrąglenie rogów */
+}
+
+h3 {
+  color: var(--h3-color);
+}
+
+h4 {
+  color: var(--h4-color);
+}
+
+/* paragraph tag settings */
+p {
+  font-size: 18px; /* Change this value to your desired font size */
+  color: var(--p-color);
+}
+
+/* paragraph classes*/
+.paragraph-header-01 {
+  font-size: 19px; /* Change this value to your desired font size */
+  color: #00a2ff;
+}
+
+/* section settings */
+section {
+  text-align: center;
+  padding: 50px;
+  width: 80%;
+  max-width: 800px;
+  color: #00a2ff;
+}
+
+/* button that is used for links */
+.button-link {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
+  background-color: #007BFF;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+  margin: 5px 0;
+}
+
+.button-link:hover {
+  background-color: #0056b3;
+}
+
+#toggle-button {
+    background-color: #007BFF; /* Kolor tła */
+    color: white; /* Kolor tekstu */
+    border: none; /* Usuń obramowanie */
+    padding: 10px 20px; /* Wewnętrzne odstępy */
+    font-size: 16px; /* Rozmiar czcionki */
+    cursor: pointer; /* Wskaźnik myszki */
+    border-radius: 5px; /* Zaokrąglenie rogów */
+  }
+
+#toggle-button:hover {
+    background-color: #0056b3; /* Jaśniejszy odcień tła po najechaniu */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.center-table {
+  display: flex;
+  justify-content: center;
+}
+
+table {
+  border-collapse: collapse;
+  width: auto;
+  text-align: left;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+th {
+  background-color: #f4f4f4;
+  text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Add a semi-transparent overlay to the background */
+body {
+  position: relative; /* Ensure the body is the parent for the overlay */
+  background-image: url('../images/background.jpg'); /* Adjust the path to your image */
+  background-size: contain; /* Ensures the image covers the entire background */
+  background-repeat: repeat; /* Prevents the image from repeating */
+  background-position: top; /* Centers the image */
+  color: var(--font-color); /* Ensure text is readable */
+}
+
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /*background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white overlay */
+  background-color: rgba(255, 255, 255, 0.75); /* Semi-transparent white overlay */
+  z-index: -1; /* Place it behind the content */
+}
