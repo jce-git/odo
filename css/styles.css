@@ -19,6 +19,7 @@ check README.md for more information about imported .css files */
   --h3-color: #00a2ff;
   --h4-color: white;
   --p-color: black;
+  --table-background-color: #f9f9f9;
 
 }
 
@@ -142,6 +143,7 @@ table {
   border-collapse: collapse;
   width: auto;
   text-align: left;
+  background-color: var(--table-background-color); /* comment this line if you want table background to be transparent */
 }
 
 th, td {
@@ -198,4 +200,12 @@ body::before {
   /*background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white overlay */
   background-color: rgba(255, 255, 255, 0.75); /* Semi-transparent white overlay */
   z-index: -1; /* Place it behind the content */
+}
+
+.circle-image {
+    width: 275px; /* Adjust the size as needed */
+    height: 275px; /* Ensure the height matches the width for a perfect circle */
+    border-radius: 50%; /* This makes the image circular */
+    object-fit: cover; /* Ensures the image fits within the circle */
+    border: 2px solid #000; /* Optional: Add a border */
 }

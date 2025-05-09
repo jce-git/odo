@@ -1,4 +1,10 @@
 /* photo gallery settings */
+:root {
+  --photo-gallery-border: #00a2ff;
+  --previous-next-image-button-color: #00a2ff;
+  --close-button-color: #00a2ff;
+}
+
 .photo-gallery {
     z-index: 2000; /* A high value to ensure it is above other elements */
     display: grid;
@@ -10,7 +16,7 @@
   .photo-gallery img {
     max-width: 100%;
     height: auto;
-    border: 5px solid #ffdb3a;
+    border: 5px solid var(--photo-gallery-border);
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
     cursor: pointer;
     transition: transform 0.3s ease;
@@ -95,7 +101,7 @@
   }
   
   .previous_image_button:hover, .next_image_button:hover {
-    color: #ffdb3a;
+    color: var(--previous-next-image-button-color);
     background-color: rgba(0,0,0,0.8);
   }
   
@@ -112,7 +118,7 @@
   }
   
   .close_button:hover, .close_button:focus {
-    color: #ffdb3a;
+    color: var(--close-button-color);
     text-decoration: none;
     cursor: pointer;
   }  

@@ -1,3 +1,13 @@
+:root {
+  --nav-background-color: #fff9f2;
+  --nav-a-color: #242424;
+  --nav-a-hover-color: #0077ff;
+  --nav-a-border-bottom-color: #0077ff; /* Border color for active state */
+  --nav-a-active-color: #fff9f2;
+  --nav-a-active-background-color: #0077ff;
+  --nav-a-active-border-bottom-color: #0077ff;
+}
+  
 /* navigation bar settings */
 nav {
     font-size: 16px;
@@ -5,7 +15,7 @@ nav {
     top: 0;
     width: 100%;
     z-index: 1000; /* A high value to ensure it is above other elements */
-    background-color: #242424;
+    background-color: var(--nav-background-color);
     max-height: 100vh; /* Set the maximum height to the viewport height */
     overflow-x: auto; /* Add horizontal scrollbar if content overflows */
     display: flex;
@@ -16,7 +26,7 @@ nav {
   }
   
   nav a {
-    color: #f2f2f2;
+    color: var(--nav-a-color);
     padding: 14px 16px;
     text-decoration: none;
     margin: 0 5px;
@@ -25,15 +35,15 @@ nav {
   }
   
   nav a:hover {
-    color: #ffdb3a;
-    border-bottom: 2px solid #ffdb3a; /* Change border color on hover */
+    color: var(--nav-a-hover-color);
+    border-bottom: 2px solid var(--nav-a-border-bottom-color); /* Change border color on hover */
   }
   
   nav a.active {
-    color: #000;
-    background-color: #ffdb3a;
+    color: var(--nav-a-active-color);
+    background-color: var(--nav-a-active-background-color);
     font-weight: bold;
-    border-bottom: 2px solid #ffdb3a; /* Ensure active state has the same border */
+    border-bottom: 2px solid var(--nav-a-active-border-bottom-color); /* Ensure active state has the same border */
   }
   
   /* Center the navigation items */
