@@ -204,8 +204,8 @@ body::before {
 }
 
 .circle-image {
-    width: 275px; /* Adjust the size as needed */
-    height: 275px; /* Ensure the height matches the width for a perfect circle */
+    width: 250px; /* Adjust the size as needed */
+    height: 250px; /* Ensure the height matches the width for a perfect circle */
     border-radius: 50%; /* This makes the image circular */
     object-fit: cover; /* Ensures the image fits within the circle */
     border: 2px solid #000; /* Optional: Add a border */
