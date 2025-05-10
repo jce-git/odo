@@ -7,7 +7,15 @@ const publishYearFrom = "2025";
 // Add your instagram link here
 const instagram_link = "https://www.instagram.com/oczami_dziecka_olsztyn";
 
-// Update the Instagram link
+// Update the Instagram link (if used)
 const instagramElement = document.getElementById("instagram_link");
 instagramElement.href = instagram_link;
 instagramElement.textContent = "Odwiedź nas na Instagramie!";
+
+// Define the email address
+const emailAddress = "oczamidzieckaolsztyn@gmail.com";
+
+// Update the email link dynamically
+const emailElement = document.getElementById("email_link");
+emailElement.href = `mailto:${emailAddress}`;
+emailElement.textContent = emailAddress;
