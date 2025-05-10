@@ -23,12 +23,12 @@ emailElement.textContent = emailAddress;
 
 // Update the services link (if used)
 const servicesElement = document.getElementById("services_link");
-// services_link is set in the variables.js file
+// services_link and services_link_button_text is set in the variables.js file
 servicesElement.href = services_link;
-servicesElement.textContent = "Link do listy usług na Google Sheets !";
+servicesElement.textContent = services_link_button_text;
 
 // Update the Instagram link (if used)
 const instagramElement = document.getElementById("instagram_link");
-// instagram_link is set in the variables.js file
+// instagram_link and instagram_link_button_text is set in the variables.js file
 instagramElement.href = instagram_link;
-instagramElement.textContent = "Odwiedź nas na Instagramie!";
+instagramElement.textContent = instagram_link_button_text;

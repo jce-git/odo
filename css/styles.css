@@ -1,17 +1,19 @@
-/* to make the .css code more readable we split it into different sections
+/* To make the .css code more readable we split it into different sections
 check README.md for more information about imported .css files */
 @import url('normalize.css');
 @import url('run-for-narrow-screen.css');
 @import url('run-for-wide-screen.css');
 @import url('nav-bar.css');
 @import url('photo-gallery.css');
-@import url('news-photo-gallery.css');
+@import url('news-photo-gallery.css'); /* not used */
+
+/* When you have trouble seeing changes on website press ctrl + F5 in your internet browser */
 
 /*
- * CSS styles for the website
- * This file contains the main styles for the website, including typography, colors, and layout.
- * It also includes styles for various components such as buttons, tables, and sections.
- */
+ CSS styles for the website
+ This file contains the main styles for the website, including typography and colors.
+ It also includes styles for various components such as buttons, tables, and sections.
+*/
 :root {
   --body-font-family: 'Trebuchet MS', sans-serif;
   --body-font-color: black;
