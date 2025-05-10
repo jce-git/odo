@@ -21,6 +21,12 @@ const emailElement = document.getElementById("email_link");
 emailElement.href = `mailto:${emailAddress}`;
 emailElement.textContent = emailAddress;
 
+// Update the google maps link (if used)
+const googleMapsElement = document.getElementById("google_maps_link");
+// google_maps_link and google_maps_link_button_text is set in the variables.js file
+googleMapsElement.href = google_maps_link;
+googleMapsElement.textContent = google_maps_link_button_text;
+
 // Update the services link (if used)
 const servicesElement = document.getElementById("services_link");
 // services_link and services_link_button_text is set in the variables.js file
