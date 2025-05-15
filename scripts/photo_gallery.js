@@ -14,10 +14,16 @@ function setModalDisplay(displayStyle) {
 
 // Function to open the modal and display the clicked image
 function openModal(img) {
+  originalOpenModal(img);
+  addSwipeListeners();
+}
+
+// Save the original openModal function
+const originalOpenModal = function(img) {
   setModalDisplay("flex"); // Set the modal display to flex
   document.getElementById("image_preview").src = img.src; // Set the source of the image preview to the clicked image's source
   currentImageIndex = Array.from(images).indexOf(img); // Get the index of the clicked image
-}
+};
 
 // Function to close the modal
 function closeModal() {
@@ -63,30 +69,39 @@ document.getElementById("next_image_button").addEventListener("click", function(
 let touchStartX = 0;
 let touchEndX = 0;
 
-const modal = document.getElementById("myModal");
-if (modal) {
-  modal.addEventListener("touchstart", function(event) {
-    if (event.touches.length === 1) {
-      touchStartX = event.touches[0].clientX;
-    }
-  });
+function addSwipeListeners() {
+  const modal = document.getElementById("myModal");
+  if (!modal) return;
+  // Remove previous listeners if any
+  modal.removeEventListener("touchstart", handleTouchStart);
+  modal.removeEventListener("touchend", handleTouchEnd);
+  modal.addEventListener("touchstart", handleTouchStart);
+  modal.addEventListener("touchend", handleTouchEnd);
+}
 
-  modal.addEventListener("touchend", function(event) {
-    if (event.changedTouches.length === 1) {
-      touchEndX = event.changedTouches[0].clientX;
-      const diffX = touchEndX - touchStartX;
-      if (Math.abs(diffX) > 50) { // Minimum swipe distance
-        if (diffX < 0) {
-          // Swipe left: show previous image
-          showImage(currentImageIndex - 1);
-        } else {
-          // Swipe right: show next image
-          showImage(currentImageIndex + 1);
-        }
+function handleTouchStart(event) {
+  if (event.touches.length === 1) {
+    touchStartX = event.touches[0].clientX;
+  }
+}
+
+function handleTouchEnd(event) {
+  if (event.changedTouches.length === 1) {
+    touchEndX = event.changedTouches[0].clientX;
+    const diffX = touchEndX - touchStartX;
+    if (Math.abs(diffX) > 50) { // Minimum swipe distance
+      if (diffX < 0) {
+        // Swipe left: show next image
+        showImage(currentImageIndex + 1);
+      } else {
+        // Swipe right: show previous image
+        showImage(currentImageIndex - 1);
       }
     }
-  });
+  }
 }
+
+document.addEventListener("DOMContentLoaded", addSwipeListeners);
 
 // Event delegation for image clicks
 // (Assuming there is more code here for handling image clicks)
