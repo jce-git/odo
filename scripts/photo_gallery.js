@@ -59,5 +59,34 @@ document.getElementById("next_image_button").addEventListener("click", function(
   showImage(currentImageIndex + 1); // Show the next image
 });
 
+// Swipe gesture support for mobile devices
+let touchStartX = 0;
+let touchEndX = 0;
+
+const modal = document.getElementById("myModal");
+if (modal) {
+  modal.addEventListener("touchstart", function(event) {
+    if (event.touches.length === 1) {
+      touchStartX = event.touches[0].clientX;
+    }
+  });
+
+  modal.addEventListener("touchend", function(event) {
+    if (event.changedTouches.length === 1) {
+      touchEndX = event.changedTouches[0].clientX;
+      const diffX = touchEndX - touchStartX;
+      if (Math.abs(diffX) > 50) { // Minimum swipe distance
+        if (diffX < 0) {
+          // Swipe left: show previous image
+          showImage(currentImageIndex - 1);
+        } else {
+          // Swipe right: show next image
+          showImage(currentImageIndex + 1);
+        }
+      }
+    }
+  });
+}
+
 // Event delegation for image clicks
 // (Assuming there is more code here for handling image clicks)
