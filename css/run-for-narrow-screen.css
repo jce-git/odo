@@ -1,7 +1,7 @@
 :root {
   --nav-background-color: #fff9f2;
   --nav-menu-button-for-narrow-screen-background-color: #fff9f2;
-  --nav-menu-button-for-narrow-screen-color: #f2f2f2;
+  --nav-menu-button-for-narrow-screen-color: #242424;
 }
 
 /* This example adjusts the font sizes and padding for screens that are 768 pixels wide or smaller. 
