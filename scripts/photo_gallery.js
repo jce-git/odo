@@ -26,8 +26,13 @@ const originalOpenModal = function(img) {
 };
 
 // Function to close the modal
-function closeModal() {
+const originalCloseModal = function() {
   setModalDisplay("none"); // Set the modal display to none
+};
+
+function closeModal() {
+  removeSwipeListeners();
+  originalCloseModal();
 }
 
 // Function to show the image at the specified index
@@ -65,31 +70,47 @@ document.getElementById("next_image_button").addEventListener("click", function(
   showImage(currentImageIndex + 1); // Show the next image
 });
 
-// Swipe gesture support for mobile devices
-let touchStartX = 0;
-let touchEndX = 0;
+// Swipe gesture support for mobile and desktop devices
+let pointerStartX = 0;
+let pointerStartY = 0;
+let pointerEndX = 0;
+let pointerEndY = 0;
+let swipeHandled = false;
 
 function addSwipeListeners() {
   const modal = document.getElementById("myModal");
   if (!modal) return;
   // Remove previous listeners if any
-  modal.removeEventListener("touchstart", handleTouchStart);
-  modal.removeEventListener("touchend", handleTouchEnd);
-  modal.addEventListener("touchstart", handleTouchStart);
-  modal.addEventListener("touchend", handleTouchEnd);
+  modal.removeEventListener("pointerdown", handlePointerDown);
+  modal.removeEventListener("pointerup", handlePointerUp);
+  modal.addEventListener("pointerdown", handlePointerDown);
+  modal.addEventListener("pointerup", handlePointerUp);
 }
 
-function handleTouchStart(event) {
-  if (event.touches.length === 1) {
-    touchStartX = event.touches[0].clientX;
+function removeSwipeListeners() {
+  const modal = document.getElementById("myModal");
+  if (!modal) return;
+  modal.removeEventListener("pointerdown", handlePointerDown);
+  modal.removeEventListener("pointerup", handlePointerUp);
+}
+
+function handlePointerDown(event) {
+  if (event.pointerType === "touch" || event.pointerType === "pen" || event.pointerType === "mouse") {
+    pointerStartX = event.clientX;
+    pointerStartY = event.clientY;
+    swipeHandled = false;
   }
 }
 
-function handleTouchEnd(event) {
-  if (event.changedTouches.length === 1) {
-    touchEndX = event.changedTouches[0].clientX;
-    const diffX = touchEndX - touchStartX;
-    if (Math.abs(diffX) > 50) { // Minimum swipe distance
+function handlePointerUp(event) {
+  if (swipeHandled) return;
+  if (event.pointerType === "touch" || event.pointerType === "pen" || event.pointerType === "mouse") {
+    pointerEndX = event.clientX;
+    pointerEndY = event.clientY;
+    const diffX = pointerEndX - pointerStartX;
+    const diffY = pointerEndY - pointerStartY;
+    if (Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY)) { // Horizontal swipe only
+      swipeHandled = true;
       if (diffX < 0) {
         // Swipe left: show next image
         showImage(currentImageIndex + 1);
