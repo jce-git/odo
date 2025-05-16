@@ -6,6 +6,7 @@ check README.md for more information about imported .css files */
 @import url('nav-bar.css');
 @import url('photo-gallery.css');
 @import url('news-photo-gallery.css'); /* not used */
+@import url('scroll-progress.css');
 
 /* When you have trouble seeing changes on website press ctrl + F5 in your internet browser */
 

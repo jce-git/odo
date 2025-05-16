@@ -8,6 +8,12 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <!--
+    The scroll progress bar visually indicates how much of the page has been scrolled.
+    Its width increases as the user scrolls down, providing feedback on reading progress.
+    See scripts/scroll_progress.js for the logic and css/nav-bar.css for styling.
+  -->
+  <div id="scroll-progress"></div>
   <!-- old menu button
   <button class="nav-menu-button-for-narrow-screen" onclick="toggleMenu()">Menu</button>
   -->
@@ -146,6 +152,7 @@
     <p>&copy; <span id="publish-year-from"></span> - <span id="current-year"></span> <span id="site-title"></span></p>
   </footer>
   <!-- order how we load files is important ! we have to load variables.js file first and then template.js file ! -->
+  <script src="scripts/scroll_progress.js"></script>
   <script src="scripts/variables.js"></script>
   <script src="scripts/modular_update.js"></script>
   <script src="scripts/nav_menu_button_for_narrow_screen.js"></script>
