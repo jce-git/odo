@@ -24,6 +24,7 @@ function setModalDisplay(displayStyle) {
  * @param {HTMLImageElement} img - The image element that was clicked.
  */
 function openModal(img) {
+  document.body.classList.add('no-scroll'); // Block scrolling
   originalOpenModal(img);
   addSwipeListeners();
 }
@@ -50,6 +51,7 @@ const originalCloseModal = function() {
  * Also cleans up ARIA live region and resets swipe state.
  */
 function closeModal() {
+  document.body.classList.remove('no-scroll'); // Restore scrolling
   removeSwipeListeners();
   cleanupAriaLiveRegion();
   swipeHandled = false;
