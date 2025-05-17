@@ -166,6 +166,8 @@ function addSwipeListeners() {
   modal.addEventListener("pointermove", handlePointerMove, { passive: false });
   modal.addEventListener("pointercancel", handlePointerCancel);
   modal.addEventListener("pointerleave", handlePointerLeave);
+  // Mouse wheel navigation
+  modal.addEventListener("wheel", handleModalWheel, { passive: false });
   // Set touch-action CSS for better swipe experience (only set once)
   if (modal.style.touchAction !== "pan-y") {
     modal.style.touchAction = "pan-y";
@@ -195,6 +197,7 @@ function removeSwipeListeners() {
   modal.removeEventListener("pointermove", handlePointerMove);
   modal.removeEventListener("pointercancel", handlePointerCancel);
   modal.removeEventListener("pointerleave", handlePointerLeave);
+  modal.removeEventListener("wheel", handleModalWheel);
   swipeHandled = false;
   activePointerId = null;
   pointerDirectionLocked = null;
@@ -356,6 +359,21 @@ function cleanupAriaLiveRegion() {
     ariaLiveRegion.parentNode.removeChild(ariaLiveRegion);
   }
   ariaLiveRegion = null;
+}
+
+/**
+ * Handles mouse wheel for image navigation in modal.
+ * @param {WheelEvent} event - The wheel event.
+ */
+function handleModalWheel(event) {
+  event.preventDefault();
+  if (event.deltaY < 0) {
+    // Wheel up: previous image
+    showImage(currentImageIndex - 1);
+  } else if (event.deltaY > 0) {
+    // Wheel down: next image
+    showImage(currentImageIndex + 1);
+  }
 }
 
 /**
