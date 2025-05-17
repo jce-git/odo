@@ -47,11 +47,24 @@ const originalCloseModal = function() {
 
 /**
  * Closes the modal and removes swipe listeners.
+ * Also cleans up ARIA live region and resets swipe state.
  */
 function closeModal() {
   removeSwipeListeners();
+  cleanupAriaLiveRegion();
+  swipeHandled = false;
+  activePointerId = null;
+  originalCloseModal();
+  // Announce modal close for accessibility
+  announceToAriaLive('Photo gallery modal closed.');
+}
+
+/**
+ * The original function to close the modal without swipe function.
+function closeModal() {
   originalCloseModal();
 }
+*/
 
 /**
  * Shows the image at the specified index in the modal preview.
@@ -117,6 +130,7 @@ let pointerEndY = 0;
 let swipeHandled = false;
 let activePointerId = null;
 let ariaLiveRegion = null;
+let pointerDirectionLocked = null; // null, 'horizontal', or 'vertical'
 
 /**
  * Checks if the pointer event type is supported for swipe gestures.
@@ -139,17 +153,21 @@ function isInteractiveElement(target) {
 /**
  * Adds swipe gesture event listeners to the modal for navigation.
  * Also creates an ARIA live region for accessibility feedback if not present.
+ * Adds pointerleave for swipe state cleanup. Sets touch-action CSS.
  */
 function addSwipeListeners() {
   const modal = document.getElementById("myModal");
   if (!modal) return;
-  // Remove previous listeners if any
   removeSwipeListeners();
   modal.addEventListener("pointerdown", handlePointerDown);
   modal.addEventListener("pointerup", handlePointerUp);
   modal.addEventListener("pointermove", handlePointerMove, { passive: false });
   modal.addEventListener("pointercancel", handlePointerCancel);
-  // Add ARIA live region for feedback if not present
+  modal.addEventListener("pointerleave", handlePointerLeave);
+  // Set touch-action CSS for better swipe experience (only set once)
+  if (modal.style.touchAction !== "pan-y") {
+    modal.style.touchAction = "pan-y";
+  }
   if (!ariaLiveRegion) {
     ariaLiveRegion = document.createElement('div');
     ariaLiveRegion.setAttribute('aria-live', 'polite');
@@ -158,10 +176,14 @@ function addSwipeListeners() {
     ariaLiveRegion.style.left = '-9999px';
     document.body.appendChild(ariaLiveRegion);
   }
+  // Announce modal open for accessibility
+  announceToAriaLive('Photo gallery modal opened.');
 }
 
 /**
  * Removes swipe gesture event listeners from the modal.
+ * Also removes pointerleave event.
+ * Always resets swipe state on removal for robustness.
  */
 function removeSwipeListeners() {
   const modal = document.getElementById("myModal");
@@ -170,34 +192,56 @@ function removeSwipeListeners() {
   modal.removeEventListener("pointerup", handlePointerUp);
   modal.removeEventListener("pointermove", handlePointerMove);
   modal.removeEventListener("pointercancel", handlePointerCancel);
+  modal.removeEventListener("pointerleave", handlePointerLeave);
+  swipeHandled = false;
+  activePointerId = null;
+  pointerDirectionLocked = null;
+  // Defensive: cleanup ARIA region if modal is removed unexpectedly
+  if (!document.body.contains(modal)) {
+    cleanupAriaLiveRegion();
+  }
 }
 
 /**
  * Handles the pointerdown event to start swipe tracking.
  * Ignores events on interactive elements.
+ * Prevents multi-touch interference.
+ * Uses pointer capture for robustness.
  * @param {PointerEvent} event - The pointerdown event.
  */
 function handlePointerDown(event) {
   if (!isPointerTypeSupported(event)) return;
   if (isInteractiveElement(event.target)) return;
+  // Prevent multi-touch interference: only allow one active pointer
+  if (activePointerId !== null) return;
   pointerStartX = event.clientX;
   pointerStartY = event.clientY;
   swipeHandled = false;
   activePointerId = event.pointerId;
+  event.target.setPointerCapture && event.target.setPointerCapture(event.pointerId);
+  // Lock direction after threshold (gesture lock)
+  pointerDirectionLocked = null;
 }
 
 /**
  * Handles the pointermove event to optionally prevent vertical scrolling during a horizontal swipe.
+ * Prevents accidental swipe if vertical movement is significant.
  * @param {PointerEvent} event - The pointermove event.
  */
 function handlePointerMove(event) {
   if (swipeHandled) return;
   if (!isPointerTypeSupported(event)) return;
   if (event.pointerId !== activePointerId) return;
-  // Prevent vertical scroll if horizontal swipe is detected
   const diffX = event.clientX - pointerStartX;
   const diffY = event.clientY - pointerStartY;
-  if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > SWIPE_THRESHOLD / 2) {
+  // Lock direction after a small threshold
+  if (!pointerDirectionLocked && (Math.abs(diffX) > 10 || Math.abs(diffY) > 10)) {
+    pointerDirectionLocked = Math.abs(diffX) > Math.abs(diffY) ? 'horizontal' : 'vertical';
+  }
+  // Prevent accidental swipe if vertical movement is significant
+  if (pointerDirectionLocked === 'vertical') return;
+  if (Math.abs(diffY) > 2 * SWIPE_THRESHOLD) return;
+  if (pointerDirectionLocked === 'horizontal' && Math.abs(diffX) > SWIPE_THRESHOLD / 2) {
     event.preventDefault();
   }
 }
@@ -205,23 +249,34 @@ function handlePointerMove(event) {
 /**
  * Handles the pointerup event to detect swipe gestures and navigate images.
  * Provides ARIA feedback for accessibility and edge cases.
+ * Always resets swipe state after pointerup.
+ * Releases pointer capture if set.
  * @param {PointerEvent} event - The pointerup event.
  */
 function handlePointerUp(event) {
-  if (swipeHandled) return;
   if (!isPointerTypeSupported(event)) return;
   if (event.pointerId !== activePointerId) return;
   pointerEndX = event.clientX;
   pointerEndY = event.clientY;
   const diffX = pointerEndX - pointerStartX;
   const diffY = pointerEndY - pointerStartY;
-  if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(diffX) > Math.abs(diffY)) { // Horizontal swipe only
+  // Prevent accidental swipe if vertical movement is significant
+  if (Math.abs(diffY) > 2 * SWIPE_THRESHOLD) {
+    swipeHandled = false;
+    activePointerId = null;
+    pointerDirectionLocked = null;
+    if (event.target && event.target.isConnected && event.target.releasePointerCapture) {
+      event.target.releasePointerCapture(event.pointerId);
+    }
+    return;
+  }
+  if (!swipeHandled && Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(diffX) > Math.abs(diffY)) { // Horizontal swipe only
     swipeHandled = true;
     if (diffX < 0) {
       // Swipe left: show next image
       if (currentImageIndex < images.length - 1) {
         showImage(currentImageIndex + 1);
-        announceToAriaLive('Next image');
+        announceToAriaLive(`Next image (${currentImageIndex + 1} of ${images.length}: ${images[currentImageIndex].alt || ''})`);
       } else {
         announceToAriaLive('This is the last image.');
       }
@@ -229,13 +284,22 @@ function handlePointerUp(event) {
       // Swipe right: show previous image
       if (currentImageIndex > 0) {
         showImage(currentImageIndex - 1);
-        announceToAriaLive('Previous image');
+        announceToAriaLive(`Previous image (${currentImageIndex + 1} of ${images.length}: ${images[currentImageIndex].alt || ''})`);
       } else {
         announceToAriaLive('This is the first image.');
       }
     }
+  } else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(diffY) > Math.abs(diffX)) {
+    // Feedback for ignored swipe due to vertical movement
+    announceToAriaLive('Swipe ignored: too much vertical movement.');
   }
+  // Always reset state after pointerup
+  swipeHandled = false;
   activePointerId = null;
+  pointerDirectionLocked = null;
+  if (event.target && event.target.isConnected && event.target.releasePointerCapture) {
+    event.target.releasePointerCapture(event.pointerId);
+  }
 }
 
 /**
@@ -245,18 +309,51 @@ function handlePointerUp(event) {
 function handlePointerCancel(event) {
   if (!isPointerTypeSupported(event)) return;
   if (event.pointerId !== activePointerId) return;
+  if (event.target && event.target.isConnected && event.target.releasePointerCapture) {
+    event.target.releasePointerCapture(event.pointerId);
+  }
   activePointerId = null;
   swipeHandled = false;
+  pointerDirectionLocked = null;
+}
+
+/**
+ * Handles the pointerleave event to reset swipe tracking if pointer leaves modal.
+ * @param {PointerEvent} event - The pointerleave event.
+ */
+function handlePointerLeave(event) {
+  if (activePointerId !== null && event.target && event.target.isConnected && event.target.releasePointerCapture) {
+    event.target.releasePointerCapture(activePointerId);
+  }
+  swipeHandled = false;
+  activePointerId = null;
+  pointerDirectionLocked = null;
 }
 
 /**
  * Announces a message to the ARIA live region for screen readers.
+ * Clears textContent before setting new message to ensure repeated messages are announced.
  * @param {string} message - The message to announce.
  */
 function announceToAriaLive(message) {
   if (ariaLiveRegion) {
-    ariaLiveRegion.textContent = message;
+    // Clear first to ensure repeated messages are announced
+    ariaLiveRegion.textContent = '';
+    window.requestAnimationFrame(() => {
+      ariaLiveRegion.textContent = message;
+    });
   }
+}
+
+/**
+ * Cleans up the ARIA live region from the DOM if it exists.
+ * Removes all references for memory leak prevention.
+ */
+function cleanupAriaLiveRegion() {
+  if (ariaLiveRegion && ariaLiveRegion.parentNode) {
+    ariaLiveRegion.parentNode.removeChild(ariaLiveRegion);
+  }
+  ariaLiveRegion = null;
 }
 
 /**
