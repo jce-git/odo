@@ -127,6 +127,20 @@
       <img id="image_preview" src="" alt="Image Preview">
       <span id="next_image_button" class="next_image_button" onclick="event.stopPropagation();">&#10095;</span>
       <span class="close_button" onclick="closeModal()">&times;</span>
+      <!-- This div is used show number of currently opened image -->
+      <div id="image_counter" style="
+        position: absolute;
+        top: 16px;
+        left: 24px;
+        background: rgba(0,0,0,0.6);
+        color: #fff;
+        padding: 4px 12px;
+        border-radius: 16px;
+        font-size: 1rem;
+        z-index: 10;
+        pointer-events: none;
+        user-select: none;
+    "></div>
     </div>
 
     <!-- Link to external photo_gallery_script.js file -->

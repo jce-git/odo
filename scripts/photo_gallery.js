@@ -30,6 +30,16 @@ function openModal(img) {
 }
 
 /**
+ * Updates the image counter in the modal (div id="image_counter").
+ */
+function updateImageCounter() {
+  const counter = document.getElementById("image_counter");
+  if (counter) {
+    counter.textContent = `${currentImageIndex + 1} / ${images.length}`;
+  }
+}
+
+/**
  * The original function to open the modal and set the image preview.
  * @param {HTMLImageElement} img - The image element to display in the modal.
  */
@@ -37,6 +47,7 @@ const originalOpenModal = function(img) {
   setModalDisplay("flex"); // Set the modal display to flex
   document.getElementById("image_preview").src = img.src; // Set the source of the image preview to the clicked image's source
   currentImageIndex = Array.from(images).indexOf(img); // Get the index of the clicked image
+  updateImageCounter(); // Update the image counter in the modal in div id="image_counter"
 };
 
 /**
@@ -77,6 +88,7 @@ function showImage(index) {
   if (index >= 0 && index < images.length) { // Check if the index is within bounds
     document.getElementById("image_preview").src = images[index].src; // Set the source of the image preview to the image at the specified index
     currentImageIndex = index; // Update the current image index
+    updateImageCounter(); // Update the image counter in the modal in div id="image_counter"
   }
 }
 

@@ -30,7 +30,7 @@
 .modal {
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 2000; /* A high value to ensure it is above other elements */
   padding-top: 60px;
   left: 0;
   top: 0;
@@ -57,7 +57,7 @@
 #myModal {
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 2000; /* A high value to ensure it is above other elements */
   left: 0;
   top: 0;
   width: 100%;
@@ -81,10 +81,11 @@
 .previous_image_button, .next_image_button {
   cursor: pointer;
   position: absolute;
-  bottom: 10%;
+  top: 50%;
+  transform: translateY(-50%);
   width: auto;
   padding: 16px;
-  margin-top: 22px;
+  margin-top: 0;
   color: white;
   font-weight: bold;
   font-size: 40px;
@@ -100,7 +101,7 @@
   right: 10%;
 }
 
-.previous_image_button:hover, .next_image_button:hover {
+.previous_image_button:hover, .next_image_button:hover, .close_button:hover {
   color: var(--previous-next-image-button-color);
   background-color: rgba(0,0,0,0.8);
 }
@@ -108,8 +109,8 @@
 /* Close button */
 .close_button {
   position: absolute;
-  top: 20%;
-  right:  10%;
+  top: 2%;
+  right: 10%;
   color: white;
   font-size: 50px;
   font-weight: bold;
@@ -149,8 +150,32 @@ body.no-scroll, html.no-scroll {
   }
 
   .close_button {
+    font-size: 50px;
+    top: 2%;
+    right: 2%;
+  }
+}
+
+@media only screen and (max-width: 764px) {
+  .previous_image_button, .next_image_button {
+    top: auto;
+    bottom: 5%;
+    transform: none;
     font-size: 30px;
-    top: 10%;
-    right: 5%;
+    padding: 10px;
+  }
+  .previous_image_button {
+    left: 10%;
+  }
+  .next_image_button {
+    right: 10%;
+  }
+  .close_button {
+    top: auto;
+    bottom: 5%;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    font-size: 50px;
   }
 }
